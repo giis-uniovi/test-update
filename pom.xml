@@ -22,18 +22,18 @@
  		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.13.1</version><!--$NO-MVN-MAN-VER$-->
+			<version>4.13</version><!--$NO-MVN-MAN-VER$-->
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.github.javiertuya</groupId>
 			<artifactId>visual-assert</artifactId>
-			<version>2.6.0</version><!--$NO-MVN-MAN-VER$-->
+			<version>2.5.1</version><!--$NO-MVN-MAN-VER$-->
 		</dependency>
 		<dependency>
 			<groupId>io.github.javiertuya</groupId>
 			<artifactId>portable-java</artifactId>
-			<version>2.4.2</version><!--$NO-MVN-MAN-VER$-->
+			<version>2.4.0</version><!--$NO-MVN-MAN-VER$-->
 		</dependency>
 		<!--
 		<dependency>
