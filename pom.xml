@@ -40,7 +40,7 @@
 		<dependency>
 			<groupId>io.github.javiertuya</groupId>
 			<artifactId>visual-assert</artifactId>
-			<version>2.5.1</version><!--$NO-MVN-MAN-VER$-->
+			<version>2.6.2</version><!--$NO-MVN-MAN-VER$-->
 		</dependency>
 		<dependency>
 			<groupId>io.github.javiertuya</groupId>
