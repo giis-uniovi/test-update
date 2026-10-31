@@ -32,9 +32,9 @@ on:
         type: boolean
         default: false
       assignee:
-        description: GitHub user that is assigned and mentioned in the issue opened on failure
+        description: GitHub user that is assigned and mentioned in the issue opened on failure (none if empty)
         type: string
-        default: javiertuya
+        default: ''
     secrets:
       DIGESTABOT_TOKEN:
         description: PAT with repo scope, used to push and to open the PR so that other workflows are triggered
@@ -129,10 +129,14 @@ jobs:
           steps=$(gh api "repos/$REPO/actions/runs/$RUN_ID/jobs" \
             --jq '.jobs[0].steps[] | select(.conclusion == "failure") | "- Failed step: " + .name')
           errors=$(cat "$RUNNER_TEMP/digestabot-errors.txt" 2>/dev/null || true)
-          body="@$ASSIGNEE The digestabot workflow failed: $RUN_URL"$'\n\n'"$steps"$'\n'"$errors"
+          mention=""
+          [ -z "$ASSIGNEE" ] || mention="@$ASSIGNEE "
+          body="${mention}The digestabot workflow failed: $RUN_URL"$'\n\n'"$steps"$'\n'"$errors"
           number=$(gh issue list --repo "$REPO" --state open --search "\"$TITLE\" in:title" --json number --jq '.[0].number // empty')
           if [ -n "$number" ]; then
             gh issue comment "$number" --repo "$REPO" --body "$body"
           else
-            gh issue create --repo "$REPO" --title "$TITLE" --body "$body" --assignee "$ASSIGNEE"
+            assign=()
+            [ -z "$ASSIGNEE" ] || assign=(--assignee "$ASSIGNEE")
+            gh issue create --repo "$REPO" --title "$TITLE" --body "$body" "${assign[@]}"
           fi

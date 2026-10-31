@@ -13,7 +13,7 @@ with the new digests and adds two checks that digestabot does not make by itself
 - Fails if an image cannot be resolved (e.g. registry without login).
 - Fails if an image was built more than `stale-days` ago (it has not been rebuilt upstream).
 
-When the job fails, it opens an issue (or comments on the open one) assigned to `assignee`.
+When the job fails, it opens an issue (or comments on the open one), assigned to `assignee` if set.
 
 ### Usage
 
@@ -52,7 +52,7 @@ Callers in the same repository can use `./.github/workflows/digestabot-reusable.
 | `title-prefix` | `Update Docker image digests for` | PR title and commit message are `<title-prefix> <image-name>` |
 | `stale-days` | `30` | Fail if an image was built more than this number of days ago |
 | `dhi-login` | `false` | Log in to `dhi.io` before running (needs the DHI secrets) |
-| `assignee` | `javiertuya` | User assigned and mentioned in the failure issue |
+| `assignee` | (none) | User assigned and mentioned in the failure issue; if empty, the issue is not assigned |
 
 ### Secrets
 
@@ -78,8 +78,7 @@ Notes:
 - A fine-grained token belongs to a single resource owner (a user or an organization), so
   repositories of different owners need a different token each, stored with the same secret name.
   Organizations may require approval of fine-grained tokens, and may restrict classic ones.
-- The fine-grained permissions are derived from the GitHub API documentation, but have not been
-  verified with a run yet; the workflow has only been tested with a classic token.
+- The fine-grained permissions listed above have been verified with a run, as well as the classic token.
 - The issue on failure uses the `GITHUB_TOKEN` of the job, so it only needs `issues: write` in the
   caller permissions (shown above).
 - With a PAT, the setting *Allow GitHub Actions to create and approve pull requests* is not needed.

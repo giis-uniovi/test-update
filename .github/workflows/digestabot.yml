@@ -15,6 +15,7 @@ jobs:
     with:
       image-name: XXX
       dhi-login: true
+      assignee: javiertuya
     secrets:
       DIGESTABOT_TOKEN: ${{ secrets.DIGESTABOT_TOKEN }}
       DHI_USERNAME: ${{ secrets.DHI_USERNAME }}
