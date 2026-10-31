@@ -11,6 +11,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      issues: write
     steps:
       - uses: actions/checkout@v7.0.1
         with:
@@ -69,3 +70,23 @@ jobs:
             fi
           done < <(grep -rhoE --include='Dockerfile*' '[^[:space:]="]+@sha256:[a-f0-9]{64}' dockerfiles)
           exit $failed
+      # Report the failure in an issue (or in a comment if there is already an open one)
+      - name: Report failure in an issue
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          job_id=$(gh api "repos/$REPO/actions/runs/$RUN_ID/jobs" --jq '.jobs[0].id')
+          errors=$(gh api "repos/$REPO/check-runs/$job_id/annotations" \
+            --jq '.[] | select(.annotation_level == "failure" and (.message | startswith("Process completed") | not)) | "- " + .message')
+          body="The digestabot workflow failed: $RUN_URL"$'\n\n'"${errors:-No error annotations were found, see the run log.}"
+          title="digestabot workflow failed"
+          number=$(gh issue list --repo "$REPO" --state open --search "\"$title\" in:title" --json number --jq '.[0].number // empty')
+          if [ -n "$number" ]; then
+            gh issue comment "$number" --repo "$REPO" --body "$body"
+          else
+            gh issue create --repo "$REPO" --title "$title" --body "$body"
+          fi
