@@ -20,7 +20,7 @@ jobs:
         with:
           registry: dhi.io
           username: ${{ secrets.DHI_USERNAME }}
-          password: ${{ secrets.DHI_TOKEN_WRONG }}  # TEMPORARY: forces a login failure
+          password: ${{ secrets.DHI_TOKEN }}
       - uses: chainguard-dev/digestabot@v1.3.2
         with:
           token: ${{ secrets.DIGESTABOT_TOKEN }}
