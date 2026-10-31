@@ -71,7 +71,7 @@ jobs:
           branch-for-pr: ${{ inputs.branch-prefix }}${{ inputs.image-name }}
           title-for-pr: ${{ inputs.title-prefix }} ${{ inputs.image-name }}
           commit-message: ${{ inputs.title-prefix }} ${{ inputs.image-name }}
-          labels-for-pr: dependencies, docker
+          labels-for-pr: dependencies, docker, digestabot
           description-for-pr: |
             Refreshes the pinned digest of the `${{ inputs.image-name }}` base image in `${{ inputs.working-dir }}`.
 
