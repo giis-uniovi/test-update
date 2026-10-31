@@ -16,7 +16,8 @@ jobs:
       - uses: chainguard-dev/digestabot@v1.3.2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          include-files: dockerfiles/Dockerfile*
+          working-dir: dockerfiles
+          include-files: Dockerfile*
           use-gitsign: 'false'
           title-for-pr: Update Docker image digests
           commit-message: Update Docker image digests
