@@ -1,0 +1,16 @@
+name: digestabot-push-test
+
+# Checks whether pushing the digestabot branch triggers workflows.
+# Pushes made with the default GITHUB_TOKEN never do; a PAT or GitHub App token does.
+on:
+  push:
+    branches:
+      - 'digestabot/**'
+
+jobs:
+  triggered:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "Triggered by push to ${{ github.ref_name }}"
+          echo "Actor: ${{ github.actor }}, event: ${{ github.event_name }}"

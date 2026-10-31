@@ -19,12 +19,12 @@ jobs:
           working-dir: dockerfiles
           include-files: Dockerfile.node
           use-gitsign: 'false'
-          branch-for-pr: digestabot/docker/node
-          title-for-pr: Update Docker image digests for node
-          commit-message: Update Docker image digests for node
+          branch-for-pr: digestabot/docker/XXX
+          title-for-pr: Update Docker image digests for XXX
+          commit-message: Update Docker image digests for XXX
           labels-for-pr: dependencies, docker
           description-for-pr: |
-            Refreshes the pinned digest of the `node` base image in `dockerfiles/Dockerfile.node`.
+            Refreshes the pinned digest of the `XXX` base image in `dockerfiles/Dockerfile.XXX`.
 
             The tag is unchanged: the registry now serves a different image behind it (e.g. a rebuilt base OS). The diff shows the previous and the new digest.
 
