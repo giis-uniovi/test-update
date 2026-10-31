@@ -48,12 +48,17 @@ jobs:
           crane() {
             docker run --rm -e DOCKER_CONFIG=/dc -v "$HOME/.docker:/dc:ro"               gcr.io/go-containerregistry/crane:latest "$@"
           }
+          errors_file="$RUNNER_TEMP/digestabot-errors.txt"
           failed=0
+          fail() {
+            echo "::error::$1"
+            echo "- $1" >> "$errors_file"
+            failed=1
+          }
           while read -r ref; do
             image="${ref%%@*}"
             if ! crane digest "$image" > /dev/null 2>&1; then
-              echo "::error::Cannot retrieve the digest of $image"
-              failed=1
+              fail "Cannot retrieve the digest of $image"
               continue
             fi
             # Build time: manifest annotation, or the config of the amd64 image as a fallback
@@ -65,8 +70,7 @@ jobs:
             fi
             age=$(( ($(date +%s) - $(date -d "$created" +%s)) / 86400 ))
             if [ "$age" -gt "$STALE_AFTER_DAYS" ]; then
-              echo "::error::Stale image $image: last built on ${created%%T*} ($age days ago, limit $STALE_AFTER_DAYS)"
-              failed=1
+              fail "Stale image $image: last built on ${created%%T*} ($age days ago, limit $STALE_AFTER_DAYS)"
             fi
           done < <(grep -rhoE --include='Dockerfile*' '[^[:space:]="]+@sha256:[a-f0-9]{64}' dockerfiles)
           exit $failed
@@ -79,10 +83,10 @@ jobs:
           RUN_ID: ${{ github.run_id }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          job_id=$(gh api "repos/$REPO/actions/runs/$RUN_ID/jobs" --jq '.jobs[0].id')
-          errors=$(gh api "repos/$REPO/check-runs/$job_id/annotations" \
-            --jq '.[] | select(.annotation_level == "failure" and (.message | startswith("Process completed") | not)) | "- " + .message')
-          body="The digestabot workflow failed: $RUN_URL"$'\n\n'"${errors:-No error annotations were found, see the run log.}"
+          steps=$(gh api "repos/$REPO/actions/runs/$RUN_ID/jobs" \
+            --jq '.jobs[0].steps[] | select(.conclusion == "failure") | "- Failed step: " + .name')
+          errors=$(cat "$RUNNER_TEMP/digestabot-errors.txt" 2>/dev/null || true)
+          body="The digestabot workflow failed: $RUN_URL"$'\n\n'"$steps"$'\n'"$errors"
           title="digestabot workflow failed"
           number=$(gh issue list --repo "$REPO" --state open --search "\"$title\" in:title" --json number --jq '.[0].number // empty')
           if [ -n "$number" ]; then
