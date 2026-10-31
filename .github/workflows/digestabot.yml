@@ -27,6 +27,7 @@ jobs:
           working-dir: dockerfiles
           include-files: Dockerfile*
           use-gitsign: 'false'
+          stale-after: 30
           branch-for-pr: digestabot/docker/XXX
           title-for-pr: Update Docker image digests for XXX
           commit-message: Update Docker image digests for XXX
