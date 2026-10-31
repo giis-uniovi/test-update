@@ -1,0 +1,22 @@
+name: digestabot
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update-digests:
+    # Only the repository owner can run this workflow
+    if: github.actor == 'javiertuya'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: chainguard-dev/digestabot@v1.3.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          include-files: dockerfiles/Dockerfile*
+          use-gitsign: 'false'
+          title-for-pr: Update Docker image digests
+          commit-message: Update Docker image digests
