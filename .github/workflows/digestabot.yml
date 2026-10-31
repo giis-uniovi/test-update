@@ -87,10 +87,10 @@ jobs:
             --jq '.jobs[0].steps[] | select(.conclusion == "failure") | "- Failed step: " + .name')
           errors=$(cat "$RUNNER_TEMP/digestabot-errors.txt" 2>/dev/null || true)
           body="The digestabot workflow failed: $RUN_URL"$'\n\n'"$steps"$'\n'"$errors"
-          title="digestabot workflow failed"
+          title="Digestabot workflow failed updating docker image digests for XXX"
           number=$(gh issue list --repo "$REPO" --state open --search "\"$title\" in:title" --json number --jq '.[0].number // empty')
           if [ -n "$number" ]; then
             gh issue comment "$number" --repo "$REPO" --body "$body"
           else
-            gh issue create --repo "$REPO" --title "$title" --body "$body"
+            gh issue create --repo "$REPO" --title "$title" --body "$body" --assignee javiertuya
           fi
