@@ -20,7 +20,7 @@ jobs:
         with:
           token: ${{ secrets.DIGESTABOT_TOKEN }}
           working-dir: dockerfiles
-          include-files: Dockerfile.node
+          include-files: Dockerfile*
           use-gitsign: 'false'
           branch-for-pr: digestabot/docker/XXX
           title-for-pr: Update Docker image digests for XXX
