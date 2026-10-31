@@ -16,6 +16,11 @@ jobs:
         with:
           # The push done by digestabot reuses the checkout credentials, so the PAT is needed here too
           token: ${{ secrets.DIGESTABOT_TOKEN }}
+      - uses: docker/login-action@v4.7.0
+        with:
+          registry: dhi.io
+          username: ${{ secrets.DHI_USERNAME }}
+          password: ${{ secrets.DHI_TOKEN }}
       - uses: chainguard-dev/digestabot@v1.3.2
         with:
           token: ${{ secrets.DIGESTABOT_TOKEN }}
@@ -39,7 +44,8 @@ jobs:
           failed=0
           while read -r ref; do
             image="${ref%%@*}"
-            if ! docker run --rm -e DOCKER_CONFIG=/dc -v "$HOME/.docker:/dc:ro"                 gcr.io/go-containerregistry/crane:latest digest "$image" > /dev/null 2>&1; then
+            if ! docker run --rm -e DOCKER_CONFIG=/dc -v "$HOME/.docker:/dc:ro" \
+                gcr.io/go-containerregistry/crane:latest digest "$image" > /dev/null 2>&1; then
               echo "::error::Cannot retrieve the digest of $image"
               failed=1
             fi
