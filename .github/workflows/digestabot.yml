@@ -11,7 +11,7 @@ jobs:
       contents: write
       pull-requests: write
       issues: write
-    uses: ./.github/workflows/digestabot-reusable.yml
+    uses: javiertuya/digestabot-workflows/.github/workflows/docker-digests.yml@v1.0.0
     with:
       image-name: XXX
       dhi-login: true
