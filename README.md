@@ -31,15 +31,21 @@ jobs:
       contents: write
       pull-requests: write
       issues: write
-    uses: giis-uniovi/test-update/.github/workflows/digestabot-reusable.yml@v1
+    uses: giis-uniovi/test-update/.github/workflows/digestabot-reusable.yml@v1.0.0
     with:
       image-name: node
+      assignee: javiertuya
     secrets:
       DIGESTABOT_TOKEN: ${{ secrets.DIGESTABOT_TOKEN }}
 ```
 
-Secrets are passed explicitly because `secrets: inherit` only works inside one organization.
-Callers in the same repository can use `./.github/workflows/digestabot-reusable.yml`.
+- Reference an exact release tag: Dependabot (`github-actions` ecosystem) proposes a PR in each
+  caller for every new release, so a change does not reach all repositories at once.
+- Secrets are passed explicitly because `secrets: inherit` only works inside one organization.
+- Callers in the same repository can use `./.github/workflows/digestabot-reusable.yml`.
+- Other tools rely on two fixed values, which are not inputs on purpose: the branch prefix
+  `digestabot/docker/` (reminders treats a failing branch like the Dependabot ones) and the
+  PR label `digestabot` (dashgit lists the PRs in its Dependabot view).
 
 ### Inputs
 
@@ -48,8 +54,7 @@ Callers in the same repository can use `./.github/workflows/digestabot-reusable.
 | `image-name` | (required) | Image name, used in the branch, PR title and issue title |
 | `working-dir` | `dockerfiles` | Folder with the Dockerfiles |
 | `include-files` | `Dockerfile*` | Dockerfile name pattern, basename only (matched with `find -name` inside `working-dir`) |
-| `branch-prefix` | `digestabot/docker/` | PR branch is `<branch-prefix><image-name>` |
-| `title-prefix` | `Update Docker image digests for` | PR title and commit message are `<title-prefix> <image-name>` |
+| `title-prefix` | `Update Docker image digests for` | PR title and commit message are `<title-prefix> <image-name>`; the PR branch is `digestabot/docker/<image-name>` |
 | `stale-days` | `30` | Fail if an image was built more than this number of days ago |
 | `dhi-login` | `false` | Log in to `dhi.io` before running (needs the DHI secrets) |
 | `assignee` | (none) | User assigned and mentioned in the failure issue; if empty, the issue is not assigned |
