@@ -69,7 +69,7 @@ jobs:
           working-dir: ${{ inputs.working-dir }}
           include-files: ${{ inputs.include-files }}
           use-gitsign: 'false'
-          # Fixed prefix and label: reminders detects the branches by the prefix, dashgit lists the PRs by the label
+          # Fixed prefix and label (not inputs) so that other tools can identify these PRs (e.g. dashgit uses the label)
           branch-for-pr: digestabot/docker/${{ inputs.image-name }}
           title-for-pr: ${{ inputs.title-prefix }} ${{ inputs.image-name }}
           commit-message: ${{ inputs.title-prefix }} ${{ inputs.image-name }}

@@ -43,9 +43,9 @@ jobs:
   caller for every new release, so a change does not reach all repositories at once.
 - Secrets are passed explicitly because `secrets: inherit` only works inside one organization.
 - Callers in the same repository can use `./.github/workflows/digestabot-reusable.yml`.
-- Other tools rely on two fixed values, which are not inputs on purpose: the branch prefix
-  `digestabot/docker/` (reminders treats a failing branch like the Dependabot ones) and the
-  PR label `digestabot` (dashgit lists the PRs in its Dependabot view).
+- Two values are fixed on purpose (not inputs), so that other tools can identify these PRs:
+  the branch prefix `digestabot/docker/` and the PR label `digestabot`
+  (e.g. [DashGit](https://github.com/javiertuya/dashgit) lists them in its Dependabot view).
 
 ### Inputs
 
