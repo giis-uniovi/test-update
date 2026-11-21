@@ -28,7 +28,7 @@ jobs:
       assignee: javiertuya
       auto-merge: ${{ inputs.auto-merge }}
       merge-method: ${{ inputs.merge-method }}
-      stale-days: ${{ inputs.stale-days }}
+      stale-days: ${{ fromJSON(inputs.stale-days) }}
     secrets:
       DIGESTABOT_TOKEN: ${{ secrets.DIGESTABOT_TOKEN }}
       DHI_USERNAME: ${{ secrets.DHI_USERNAME }}
