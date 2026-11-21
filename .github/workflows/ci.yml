@@ -1,0 +1,20 @@
+name: ci
+
+# Test CI for the digestabot auto-merge tests, driven by the repository variables
+# CI_SLEEP (seconds to wait) and CI_FAIL (true to fail)
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          CI_SLEEP: ${{ vars.CI_SLEEP || '60' }}
+          CI_FAIL: ${{ vars.CI_FAIL || 'false' }}
+        run: |
+          echo "Sleeping $CI_SLEEP seconds, fail: $CI_FAIL"
+          sleep "$CI_SLEEP"
+          [ "$CI_FAIL" != "true" ]
