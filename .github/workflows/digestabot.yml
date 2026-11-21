@@ -2,16 +2,6 @@ name: digestabot
 
 on:
   workflow_dispatch:
-    inputs:
-      auto-merge:
-        type: boolean
-        default: false
-      merge-method:
-        type: string
-        default: squash
-      stale-days:
-        type: number
-        default: 365
 
 jobs:
   update-digests:
@@ -21,14 +11,11 @@ jobs:
       contents: write
       pull-requests: write
       issues: write
-    uses: javiertuya/digestabot-workflows/.github/workflows/docker-digests.yml@auto-merge
+    uses: javiertuya/digestabot-workflows/.github/workflows/docker-digests.yml@v1.0.0
     with:
       image-name: XXX
       dhi-login: true
       assignee: javiertuya
-      auto-merge: ${{ inputs.auto-merge }}
-      merge-method: ${{ inputs.merge-method }}
-      stale-days: ${{ fromJSON(inputs.stale-days) }}
     secrets:
       DIGESTABOT_TOKEN: ${{ secrets.DIGESTABOT_TOKEN }}
       DHI_USERNAME: ${{ secrets.DHI_USERNAME }}
